@@ -2,6 +2,7 @@
 {
 "id": "321oihewdqohf1unnip0",
 "name": "Pasta",
+"tag": ["pasta"],
 "ingredients": [
 "pasta, salt"
 ],
@@ -11,16 +12,4 @@
 "3. Retire pasta"
 ],
 "publishedAt": "0001-01-01T00:00:00Z"
-},
-{
-"id": "cb7si0u49b3ojfunnip0",
-"name": "Nil",
-"ingredients": [
-"salt"
-],
-"instructions": [
-"1. do smt"
-],
-"publishedAt": "2022-07-14T09:42:59.683791+02:00"
-}
-]
+}]
