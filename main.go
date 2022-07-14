@@ -2,10 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
-	
+
 	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
 )
@@ -66,11 +67,16 @@ func UpdateRecipeHandler(c *gin.Context) {
 	// Initialize the recipe
 	var recipe Recipe
 
-	// Bind the recipe from json
+	// Bind the recipe of theb ody of the request to json
 	if err := c.ShouldBindJSON(&recipe); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H {
-			"error" : err.Error()}) 
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error()})
 		return
+	}
+
+	// In the case that we have not provided with an id
+	if recipe.ID == "" {
+		recipe.ID = xid.New().String()
 	}
 
 	// We obtain the recipe we looked for
@@ -81,11 +87,22 @@ func UpdateRecipeHandler(c *gin.Context) {
 		}
 	}
 
+	// In the case we did not found it
 	if index == -1 {
-		c.JSON(http.StatusBadRequest, gin.H {
-			"error" : "Index not found",
+		response := fmt.Sprintf("Index %s not found", id)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": response,
 		})
 	}
+
+	// If we found it, replace the recipe at that position
+	recipes[index] = recipe
+
+	// And we now need to re store it on the json file
+	file, _ := json.MarshalIndent(recipes, "", "") // Write recipes as json structure in bytes
+	_ = ioutil.WriteFile("recipes.json", file, 0644)
+
+	c.JSON(http.StatusOK, recipe)
 }
 
 func main() {
