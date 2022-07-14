@@ -259,3 +259,71 @@ So for example in the API for obtaining all the recipes:
     //	  description: Successful operation
 ```
 We do not make a tab, but use spaces.
+
+And we could do also for the other endpoints that we have:
+```
+    // swagger:operation POST /recipes recipe
+    // Create a new recipe
+    // ---
+    // parameters:
+    // - name: name
+    //   in: body
+    //   description: The name of the Recipe
+    //   require: true
+    //   type: string
+    // - name: tag
+    //   in: body
+    //   description: Tags for the recipe
+    //   require: true
+    //   schema: 
+    //    type: array
+    //    items:
+    //     type: string
+    //    example: ["tag1", "tag2"]
+    // - name: ingredients
+    //   in: body
+    //   description: The ingredients of the Recipe
+    //   require: true
+    //   schema: 
+    //    type: array
+    //    items:
+    //     type: string
+    //    example: ["ingredient1", "ingredient2"]
+    // - name: instructions
+    //   in: body
+    //   description: The instructions of the Recipe
+    //   require: true
+    //   type: list
+    //   schema: 
+    //    type: array
+    //    items:
+    //     type: string
+    //    example: ["instruction1", "instruction2"]
+    // consumes:
+    // - application/json
+    // produces:
+    // - application/json
+    // responses:
+    //  '200':
+    //	  description: Successful operation
+    //  '404':
+    //    description: Invalid Recipe ID
+```
+Where note that for example in the tag parameter:
+```
+    // - name: tag
+    //   in: body
+    //   description: Tags for the recipe
+    //   require: true
+    //   schema: 
+    //    type: array
+    //    items:
+    //     type: string
+    //    example: ["tag1", "tag2"]
+```
+We define the following:
+- the name
+- where is it (body, path, ...)
+- description
+- if it is required or not
+- schema: the type and the items inside of it

@@ -35,6 +35,220 @@
             "description": "Successful operation"
           }
         }
+      },
+      "post": {
+        "description": "Create a new recipe",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "recipe"
+        ],
+        "operationId": "newRecipe",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The name of the Recipe",
+            "name": "name",
+            "in": "body"
+          },
+          {
+            "description": "Tags for the recipe",
+            "name": "tag",
+            "in": "body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "tag1",
+                "tag2"
+              ]
+            }
+          },
+          {
+            "description": "The ingredients of the Recipe",
+            "name": "ingredients",
+            "in": "body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "ingredient1",
+                "ingredient2"
+              ]
+            }
+          },
+          {
+            "type": "list",
+            "description": "The instructions of the Recipe",
+            "name": "instructions",
+            "in": "body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "instruction1",
+                "instruction2"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "404": {
+            "description": "Invalid Recipe ID"
+          }
+        }
+      }
+    },
+    "/recipes/:id": {
+      "put": {
+        "description": "To update the Recipe",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "recipe"
+        ],
+        "operationId": "updateRecipe",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "The id of the Recipe we want to update",
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "type": "string",
+            "description": "The new ID for the Recipe (optional)",
+            "name": "ID",
+            "in": "body"
+          },
+          {
+            "type": "string",
+            "description": "The name of the Recipe",
+            "name": "name",
+            "in": "body"
+          },
+          {
+            "description": "Tags for the recipe",
+            "name": "tag",
+            "in": "body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "tag1",
+                "tag2"
+              ]
+            }
+          },
+          {
+            "description": "The ingredients of the Recipe",
+            "name": "ingredients",
+            "in": "body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "ingredient1",
+                "ingredient2"
+              ]
+            }
+          },
+          {
+            "description": "The instructions of the Recipe",
+            "name": "instructions",
+            "in": "body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "instruction1",
+                "instruction2"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid Input"
+          },
+          "404": {
+            "description": "Invalid id"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete a given recipe",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "recipes"
+        ],
+        "operationId": "deleteRecipes",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The recipe id we want to remove",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/recipes/search": {
+      "get": {
+        "description": "Search recipes based on tag",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "recipes"
+        ],
+        "operationId": "searchRecipes",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "tag",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
       }
     }
   }
