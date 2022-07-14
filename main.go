@@ -1,3 +1,15 @@
+// Recipes
+// A simple API for adding, removing, reviewing and updating recipes.
+// Schemes: http
+// Host: localhost:6000
+// BasePath: /
+// Version: 1.0.0
+// Contact: Nil Andreu <nilandreug@gmail.com>
+// Consumes:
+// - application/json
+// Produces:
+// - application/json
+// swagger:meta
 package main
 
 import (
@@ -5,8 +17,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"time"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
@@ -16,7 +28,7 @@ import (
 type Recipe struct {
 	ID           string    `json:"id"`
 	Name         string    `json:"name"`
-	Tag  		 []string  `json:"tag"`
+	Tag          []string  `json:"tag"`
 	Ingredients  []string  `json:"ingredients"`
 	Instructions []string  `json:"instructions"`
 	PublishedAt  time.Time `json:"publishedAt"`
@@ -31,7 +43,14 @@ func init() { // Init function is called when the app is initialized
 	_ = json.Unmarshal([]byte(file), &recipes)
 }
 
-// Define the Routes Handlers
+// swagger:operation GET /recipes recipes listRecipes
+// Returns list of recipes
+// ---
+// produces:
+// - application/json
+// responses:
+//  '200':
+//	  description: Successful operation
 func GetSliceRecipes(c *gin.Context) {
 	c.JSON(http.StatusOK, recipes)
 }
@@ -147,11 +166,11 @@ func SearchRecipeHandler(c *gin.Context) {
 	Tag := c.Query("tag")
 	resultRecipes := make([]Recipe, 0)
 
-	for recipeIndex := 0; recipeIndex < len(recipes); recipeIndex ++ {
+	for recipeIndex := 0; recipeIndex < len(recipes); recipeIndex++ {
 		// And for this recipe, we will look for all the tags that it has
 		recipe := recipes[recipeIndex]
 
-		for tagIndex := 0; tagIndex < len(recipe.Tag); tagIndex ++ {
+		for tagIndex := 0; tagIndex < len(recipe.Tag); tagIndex++ {
 			// In the case that those are equal
 			if strings.EqualFold(recipe.Tag[tagIndex], Tag) {
 				resultRecipes = append(resultRecipes, recipe)
@@ -160,8 +179,9 @@ func SearchRecipeHandler(c *gin.Context) {
 
 		// In the case there is no match, handle this situation
 		if len(resultRecipes) == 0 {
-			c.JSON(http.StatusOK, gin.H {
-				"message" : "Not found",
+			message := fmt.Sprintf("Do not found any recipe with the tag %s", Tag)
+			c.JSON(http.StatusOK, gin.H{
+				"message": message,
 			})
 		} else {
 			c.JSON(http.StatusOK, resultRecipes)

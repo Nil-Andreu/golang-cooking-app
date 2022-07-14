@@ -7,19 +7,19 @@ In this application, you will be able to handle recipes.
 The object of the recipes is the following:
 ```
     type Recipe struct {
-        ID				string		`json:"id"`	
-        Name 			string 		`json:"name"`
-        Tags			[]string 	`json:"ingredients"`
-        Instructions	[]string	`json:"instructions"`
-        PublishedAt		time.Time	`json:"publishedAt"`
+        ID string `json:"id"`	
+        Name string `json:"name"`
+        Tags []string `json:"ingredients"`
+        Instructions []string `json:"instructions"`
+        PublishedAt	time.Time `json:"publishedAt"`
     }
 ```
 
 We first also define a **global variable** to store those recipes (for now we do not use a database):
 ```
     var recipes []Recipe
-    func init() {						// Init function is called when the app is initialized
-        recipes = make([]Recipe, 0) 	// Create the Recipe, with length of 0
+    func init() {  // Init function is called when the app is initialized
+        recipes = make([]Recipe, 0)  // Create the Recipe, with length of 0
     }
 ```
 
@@ -40,9 +40,9 @@ And we define how we will create a **new recipe**:
         }
 
         // Create a new identifier with xid
-        recipe.ID = xid.New().String()   // Create a unique identifier, like: "cb7s7ne49b3mr2q8ci00"
+        recipe.ID = xid.New().String()  // Create a unique identifier, like: "cb7s7ne49b3mr2q8ci00"
         recipe.PublishedAt = time.Now()
-        recipes = append(recipes, recipe) // Append to the slice of recipes, the new recipe
+        recipes = append(recipes, recipe)  // Append to the slice of recipes, the new recipe
 
         c.JSON(http.StatusOK, recipe)
     }
@@ -52,8 +52,7 @@ And we define how we will create a **new recipe**:
 And for obtaining the recipes, we just have to pass to the body of request the **recipes** variable:
 ```
     // Define the Routes Handlers
-    func 
-    (c *gin.Context) {
+    func GetSliceRecipes(c *gin.Context) {
         c.JSON(http.StatusOK, recipes)
     }
 ```
@@ -74,7 +73,7 @@ And not only reading, but we might want to also write to this file each time we 
 ```
     ...
     // We write the new information
-	file, _ := json.MarshalIndent(recipes, "", "")   // Write recipes as json structure in bytes
+	file, _ := json.MarshalIndent(recipes, "", "")  // Write recipes as json structure in bytes
 	_ = ioutil.WriteFile("recipes.json", file, 0644) // store it
 ```
 So in each post request, we are storing the recipes data structure in the recipes.json file (which is read when we initialize the app).
@@ -168,3 +167,95 @@ This will be a GET method, where the tag will be in the url but as *?tag=* query
         }
     }
 ```
+For comparing the two strings, we use *strings.EqualFold*, so we do not worry about if one letter is in upper or lower case.
+
+## Documentation
+Once we have defined the APIs, we could create a documentation.
+The OpenAPI Specifications is an API description format which tells:
+- General information about the API
+- Available paths and HTTP methods for each path
+- Expected inputs and responses for each path
+
+For this, we can download *go-swagger*:
+```
+    brew tap go-swagger/go-swagger
+    brew install go-swagger
+```
+
+The Swagger Metadata we would have to provide:
+- **Schemes**: transfer prototols supported in the API (http and https)
+- **Host**: the host where the api is served (localhost:6000)
+- **BasePath**: default base path for the api (/v1) for example
+- **Version**: current version of the API 
+- **Contact**: owner/author of the API
+- **Consumes**: list of MIME type values, one per line for the content the API receives (f.e. application/json)
+- **Produces**: list of default MIME types the application sends, one per line
+
+So for this, we have to add this infroamtion at the top of the *main.go* file.
+```
+    // Recipes
+    // A simple API for adding, removing, reviewing and updating recipes.
+    // Schemes: http
+    // Host: localhost:6000
+    // BasePath: /
+    // Version: 1.0.0
+    // Contact: Nil Andreu <nilandreug@gmail.com>
+    // Consumes:
+    // - application/json
+    // Produces:
+    // - application/json
+    // swagger:meta
+```
+
+And once we have defined all of this, we run the following command: *swagger generate spec -o ./swagger.json*.
+This will generate the *swagger.json* file with all the information of our API.
+```
+    {
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "Recipes\nA simple API for adding, removing, reviewing and updating recipes.",
+        "contact": {
+        "name": "Nil Andreu",
+        "email": "nilandreug@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "host": "localhost:6000",
+    "basePath": "/",
+    "paths": {}
+    }
+```
+And to serve it, we would put on the command line: *swagger serve ./swagger.json*.
+Which will show you a simple UI for the documentation of the API.
+
+In the case we wanted the UI of the Swagger: *swagger serve -F swagger ./swagger*.
+
+But now we do not have information about the different endpoints. This has to be added by us. 
+For each one, we need to add:
+- **Summary**: short description of what it does
+- **Responses**: list of possible responses that are possible when executing this operation
+- **Parameters**: parameters expected for the operation
+- **Consumes**: list of default MIME type values, one per line
+- **Produces**: list of default MIME type values, one per line
+
+So for example in the API for obtaining all the recipes:
+```
+    // swagger:operation GET /recipes recipes listRecipes
+    // Returns list of recipes
+    // ---
+    // produces:
+    // - application/json
+    // responses:
+    //  '200':
+    //	  description: Successful operation
+```
+We do not make a tab, but use spaces.

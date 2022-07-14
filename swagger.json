@@ -1,0 +1,41 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Recipes\nA simple API for adding, removing, reviewing and updating recipes.",
+    "contact": {
+      "name": "Nil Andreu",
+      "email": "nilandreug@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "host": "localhost:6000",
+  "basePath": "/",
+  "paths": {
+    "/recipes": {
+      "get": {
+        "description": "Returns list of recipes",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "recipes"
+        ],
+        "operationId": "listRecipes",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    }
+  }
+}
