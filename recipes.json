@@ -1,0 +1,15 @@
+[
+{
+"id": "321oihewdqohf1unnip0",
+"name": "Pasta",
+"tag": ["pasta"],
+"ingredients": [
+"pasta, salt"
+],
+"instructions": [
+"1. Boil Water",
+"2. Put pasta and wait 10 minutes",
+"3. Retire pasta"
+],
+"publishedAt": "0001-01-01T00:00:00Z"
+}]
